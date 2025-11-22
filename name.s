@@ -1,11 +1,17 @@
 .data
-    msg:    .asciz  "Hou\n"
+    msg:    
+            .asciz "*****Print Name*****\n"
+            .balign 32
+            .asciz "Team 27\n"
+            .balign 32
+            .asciz  "Hou\n"
             .balign 32
             .asciz  "Huang\n"
             .balign 32
             .asciz  "Hou\n"
             .balign 32
-
+            .asciz "*****End Print*****\n"
+            .balign 32
     f:      .asciz  "%s"
 
 .text
@@ -14,7 +20,7 @@
 name:
         stmfd   sp!, {lr}
         ldr     r4, =msg
-        mov     r5, #0
+        mov     r5, #0 @ counter
 
         bl      loop
         mov     r0, #0
@@ -31,9 +37,11 @@ loop:
 
         ldmfd   sp!, {lr}
 
-        add     r4, r4, #32
+        add     r4, r4, #32 @ move to next string
         add     r5, r5, #1
-        cmp     r5, #3
+        cmp     r5, #6
         blt     loop
 
         mov     pc, lr
+
+

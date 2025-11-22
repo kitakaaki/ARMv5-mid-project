@@ -13,62 +13,105 @@ string_output:
     .asciz "*****Print Team Member ID and ID Summation*****\n"
 string_end_print:
     .asciz "*****End Print*****\n"
+string_sum:
+    .asciz "\nID Summation = "
+
+format_int:   .asciz "%d\n"
+format_scanf: .asciz "%d"
+format_char:  .asciz "%c"
+
 id1:    .word 0      
 id2:    .word 0      
 id3:    .word 0      
-sum:    .word 0      
+sum:    .word 0
+cmd:    .word 0      @ 用來存放使用者輸入指令 (例如 p)
 
-    .section .bss
-id1_string: .space 12
-id2_string: .space 12
-id3_string: .space 12
-sum_string: .space 12
+.global format_int, id1, id2, id3, sum, string_sum
 
     .section .text
-.global print_string
-.global read_string
 .global ID
 
-print_string:
-    stmfd   sp!, {lr}        @ push lr
-    mov     r0, #1             @ stdout
-    mov     r7, #4             @ sys_write
-    @ r1 = string pointer
-    @ r2 = string length         
-    swi 0
-    ldmfd   sp!, {lr}        @ pop lr
-    bx      lr
-
-read_string:
-    stmfd   sp!, {lr}
-    mov     r2, #11
-    @ r1 = buffer pointer
-    mov     r0, #0  @ stdin
-    mov     r7, #3  @ sys_read
-    swi     #0  
-    ldmfd   sp!, {lr}
-    bx      lr
-
 ID:
-    @ push lr
     stmfd   sp!, {lr}
-    @ Print input ID header
-    ldr     r1, =string_input_id      
-    mov     r2, #24  
-    bl      print_string   
+
+    @ Print header
+    ldr     r0, =string_input_id
+    bl      printf
+
     @ Input Member 1 ID
-    ldr     r1, =string_prompt1      
-    mov     r2, #32  
-    bl      print_string
-    @ read Member 1 ID
-    ldr     r1, =id1_string      
-    bl      read_string
-    @output Member 1 ID
-    ldr     r1, =id1_string
-    mov     r2, #11
-    bl     print_string
-    @ pop lr
+    ldr     r0, =string_prompt1
+    bl      printf
+    ldr     r0, =format_scanf
+    ldr     r1, =id1
+    bl      scanf
+
+    @ Input Member 2 ID
+    ldr     r0, =string_prompt2
+    bl      printf
+    ldr     r0, =format_scanf
+    ldr     r1, =id2
+    bl      scanf
+
+    @ Input Member 3 ID
+    ldr     r0, =string_prompt3
+    bl      printf
+    ldr     r0, =format_scanf
+    ldr     r1, =id3
+    bl      scanf
+
+    @ calculate sum
+    ldr     r0, =id1
+    ldr     r0, [r0]
+    ldr     r1, =id2
+    ldr     r1, [r1]
+    add     r0, r0, r1
+    ldr     r1, =id3
+    ldr     r1, [r1]
+    add     r0, r0, r1
+    ldr     r1, =sum
+    str     r0, [r1]
+
+    @ input command
+    ldr     r0, =string_command
+    bl      printf
+    ldr     r0, =format_scanf
+    ldr     r1, =cmd
+    bl      scanf
+
+    @ Print output header
+    ldr     r0, =string_output
+    bl      printf
+
+    @ Print Member 1 ID
+    ldr     r0, =format_int
+    ldr     r1, =id1
+    ldr     r1, [r1]
+    bl      printf
+
+    @ Print Member 2 ID
+    ldr     r0, =format_int
+    ldr     r1, =id2
+    ldr     r1, [r1]
+    bl      printf
+
+    @ Print Member 3 ID
+    ldr     r0, =format_int
+    ldr     r1, =id3
+    ldr     r1, [r1]
+    bl      printf
+
+    @ Print Sum label and value
+    ldr     r0, =string_sum
+    bl      printf
+    ldr     r0, =format_int
+    ldr     r1, =sum
+    ldr     r1, [r1]
+    bl      printf
+
+    @ Print end string
+    ldr     r0, =string_end_print
+    bl      printf
+
     ldmfd   sp!, {lr}
-    mov     r0, #0
     bx      lr
 
