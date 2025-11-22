@@ -9,6 +9,9 @@
         .asciz "*****Print All*****\n"
     string_end_print:
         .asciz "*****End Print*****\n"
+    format_id_name: 
+        .asciz "%d %s"
+
 .text
 .global main
 
@@ -31,23 +34,35 @@ main:
     ldr r0, = string_print_all
     bl  printf
 
+    @ print team
+    ldr r4, =msg
+    add r4, r4, #32 @ move to Team
+    mov r0, r4
+    bl  printf
+
     @ print id1, name1
-    ldr     r0, =format_int
-    ldr     r1, =id1
-    ldr     r1, [r1]
-    bl      printf
+    add r4, r4, #32 @ move to first name
+    ldr r0, =format_id_name
+    ldr r1, =id1
+    ldr r1, [r1]
+    mov r2, r4
+    bl printf
 
     @ print id2, name2
-    ldr     r0, =format_int
-    ldr     r1, =id2    
-    ldr     r1, [r1]
-    bl      printf
+    add r4, r4, #32 @ move to second name
+    ldr r0, =format_id_name
+    ldr r1, =id2
+    ldr r1, [r1]
+    mov r2, r4
+    bl printf
 
     @ print id3, name3
-    ldr     r0, =format_int
-    ldr     r1, =id3    
-    ldr     r1, [r1]
-    bl      printf
+    add r4, r4, #32 @ move to third name
+    ldr r0, =format_id_name
+    ldr r1, =id3
+    ldr r1, [r1]
+    mov r2, r4
+    bl printf
 
     @ Print Sum label and value
     ldr     r0, =string_sum

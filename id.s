@@ -14,7 +14,9 @@ string_output:
 string_end_print:
     .asciz "*****End Print*****\n"
 string_sum:
-    .asciz "\nID Summation = "
+    .asciz "ID Summation = "
+string_new_line:
+    .asciz "\n"
 
 format_int:   .asciz "%d\n"
 format_scanf: .asciz "%d"
@@ -101,6 +103,8 @@ ID:
     bl      printf
 
     @ Print Sum label and value
+    ldr     r0, =string_new_line
+    bl      printf
     ldr     r0, =string_sum
     bl      printf
     ldr     r0, =format_int
