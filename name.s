@@ -13,6 +13,7 @@
             .asciz "*****End Print*****\n"
             .balign 32
     f:      .asciz  "%s"
+.global msg
 
 .text
 .global name
