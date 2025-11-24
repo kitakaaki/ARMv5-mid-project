@@ -26,7 +26,7 @@ id1:    .word 0
 id2:    .word 0      
 id3:    .word 0      
 sum:    .word 0
-cmd:    .word 0      @ 用來存放使用者輸入指令 (例如 p)
+cmd:    .word 0      
 
 .global format_int, id1, id2, id3, sum, string_sum
 
@@ -34,7 +34,13 @@ cmd:    .word 0      @ 用來存放使用者輸入指令 (例如 p)
 .global ID
 
 ID:
-    stmfd   sp!, {lr}
+    stmfd   sp!, {lr}       @ 1.
+    mov     r4, sp          @ 2. save original sp in r4 
+    mov     r5, r5          @ 3. NOP-like 
+    mov     r6, r6          @ 4. NOP-like
+    mov     r7, r7          @ 5. NOP-like
+    rsbs    sp, lr, pc      @ 6. assignment required
+    mov     sp, r4 
 
     @ Print header
     ldr     r0, =string_input_id
