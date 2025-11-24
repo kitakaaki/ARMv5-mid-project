@@ -1,3 +1,11 @@
+
+
+
+
+    mov r7, sp
+    rsbs sp, lr, pc
+    mov sp, r7
+
     .section .data
 string_input_id:
     .asciz "*****Input ID*****\n"
@@ -20,9 +28,7 @@ string_output:
 string_end_print:
     .asciz "*****End Print*****\n"
 string_sum:
-    .asciz "ID Summation = "
-string_new_line:
-    .asciz "\n"
+    .asciz "\nID Summation = "
 
 format_int:   .asciz "%d\n"
 format_scanf: .asciz "%d"
@@ -111,8 +117,6 @@ loop:
     bl      printf
 
     @ Print Sum label and value
-    ldr     r0, =string_new_line
-    bl      printf
     ldr     r0, =string_sum
     bl      printf
     ldr     r0, =format_int
