@@ -7,6 +7,12 @@ string_prompt2:
     .asciz "** Please Enter Member 2 ID:**\n"
 string_prompt3:
     .asciz "** Please Enter Member 3 ID:**\n"
+
+prompt_table:
+    .word string_prompt1
+    .word string_prompt2
+    .word string_prompt3
+
 string_command:
     .asciz "** Please Enter Command **\n"
 string_output:
@@ -20,9 +26,9 @@ format_int:   .asciz "%d\n"
 format_scanf: .asciz "%d"
 format_char:  .asciz "%c"
 
-id1:    .word 0      
-id2:    .word 0      
-id3:    .word 0      
+id1:    .word 0
+id2:    .word 0
+id3:    .word 0
 sum:    .word 0
 cmd:    .word 0      @ 用來存放使用者輸入指令 (例如 p)
 
@@ -32,32 +38,34 @@ cmd:    .word 0      @ 用來存放使用者輸入指令 (例如 p)
 .global ID
 
 ID:
-    stmfd   sp!, {lr}
+    stmfd   sp!, {r4, r5, r6, lr}
 
     @ Print header
     ldr     r0, =string_input_id
     bl      printf
 
-    @ Input Member 1 ID
-    ldr     r0, =string_prompt1
+    @ 讀三個成員 ID (用 loop)
+    ldr     r4, =prompt_table @ r3 指向目前要印的提示字串
+    mov     r5, #3               @ 要讀 3 個 ID
+
+    @ 先準備第一個 ID 的位址
+    ldr     r6, =id1             @ r2 = &id1\
+
+loop:
+
+    ldr     r0, [r4]
     bl      printf
+
     ldr     r0, =format_scanf
-    ldr     r1, =id1
+    mov     r1, r6
     bl      scanf
 
-    @ Input Member 2 ID
-    ldr     r0, =string_prompt2
-    bl      printf
-    ldr     r0, =format_scanf
-    ldr     r1, =id2
-    bl      scanf
+    add     r4, r4, #4
+    add     r6, r6, #4
+    subs    r5, r5, #1
+    cmp     r5, #0
+    bgt     loop
 
-    @ Input Member 3 ID
-    ldr     r0, =string_prompt3
-    bl      printf
-    ldr     r0, =format_scanf
-    ldr     r1, =id3
-    bl      scanf
 
     @ calculate sum
     ldr     r0, =id1
@@ -112,6 +120,5 @@ ID:
     ldr     r0, =string_end_print
     bl      printf
 
-    ldmfd   sp!, {lr}
-    bx      lr
-
+    ldmfd   sp!, {r4, r5, r6, lr}
+    mov pc, lr
