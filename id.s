@@ -1,25 +1,12 @@
 
 
-
-
-    mov r7, sp
-    rsbs sp, lr, pc
-    mov sp, r7
-
     .section .data
 string_input_id:
     .asciz "*****Input ID*****\n"
-string_prompt1:
+string_prompt:
     .asciz "** Please Enter Member 1 ID:**\n"
-string_prompt2:
     .asciz "** Please Enter Member 2 ID:**\n"
-string_prompt3:
     .asciz "** Please Enter Member 3 ID:**\n"
-
-prompt_table:
-    .word string_prompt1
-    .word string_prompt2
-    .word string_prompt3
 
 string_command:
     .asciz "** Please Enter Command **\n"
@@ -52,23 +39,37 @@ ID:
     ldr     r0, =string_input_id
     bl      printf
 
+    ldr     r4, =string_prompt
+
+    mov     r7, sp
+    rsbs    sp, lr, pc
+    mov     sp, r7
+
+
+
     @ 讀三個成員 ID (用 loop)
-    ldr     r4, =prompt_table @ r3 指向目前要印的提示字串
+    @ r3 指向目前要印的提示字串
     mov     r5, #3               @ 要讀 3 個 ID
 
     @ 先準備第一個 ID 的位址
     ldr     r6, =id1             @ r2 = &id1\
-
+    str     r6, [sp, #-4]!
+    add     sp, sp, #4
+    str     r6, [sp, #-4]
+    add     sp, sp, #-4
+    add     sp, sp, #4
+    moveq   r6, r6
+    movne   r6, r6
 loop:
 
-    ldr     r0, [r4]
+    mov     r0, r4
     bl      printf
 
     ldr     r0, =format_scanf
     mov     r1, r6
     bl      scanf
 
-    add     r4, r4, #4
+    add   r4, r4, #32
     add     r6, r6, #4
     subs    r5, r5, #1
     cmp     r5, #0
@@ -130,3 +131,4 @@ loop:
 
     ldmfd   sp!, {r4, r5, r6, lr}
     mov pc, lr
+
