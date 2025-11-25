@@ -25,7 +25,7 @@ id1:    .word 0
 id2:    .word 0
 id3:    .word 0
 sum:    .word 0
-cmd:    .word 0      @ 用來存放使用者輸入指令 (例如 p)
+cmd:    .word 0      
 
 .global format_int, id1, id2, id3, sum, string_sum
 
@@ -47,11 +47,11 @@ ID:
 
 
 
-    @ 讀三個成員 ID (用 loop)
-    @ r3 指向目前要印的提示字串
-    mov     r5, #3               @ 要讀 3 個 ID
+    @  Read three members' ID (use loop)
+    @ r3 points to the print string
+    mov     r5, #3               @ read 3 IDs
 
-    @ 先準備第一個 ID 的位址
+    @ prepare one ID address
     ldr     r6, =id1             @ r2 = &id1\
     str     r6, [sp, #-4]!
     add     sp, sp, #4
@@ -84,7 +84,7 @@ loop:
     add     r0, r0, r1
     ldr     r1, =id3
     ldr     r1, [r1]
-    add     r0, r0, r1
+    add     r0, r0, r1, lsl #0
     ldr     r1, =sum
     str     r0, [r1]
 

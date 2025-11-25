@@ -6,7 +6,7 @@
     string_main:
         .asciz "\nMain Function:\n"
     string_print_all:
-        .asciz "*****Print All*****\n"
+        .asciz "*****Print All*****\n",
     string_end_print:
         .asciz "*****End Print*****\n"
     format_id_name: 
@@ -41,11 +41,11 @@ main:
     bl  printf
 
     @ print id1, name1
-    add r4, r4, #32 @ move to first name
+    add r4, r4, #32 @ move to first name (old)
     ldr r0, =format_id_name
     ldr r1, =id1
     ldr r1, [r1]
-    mov r2, r4
+    mov r2, r4 
     bl printf
 
     @ print id2, name2
